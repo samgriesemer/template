@@ -1,9 +1,16 @@
 priority -50
 
 global !p
-
+from datetime import datetime, timedelta
 def fname_to_str(fname):
 	return fname.replace('_', ' ')
+
+def day(shift=0):
+	return (datetime.now()+timedelta(shift)).strftime('%Y-%m-%d')
+
+TODAY=day()
+TOMOR=day(1)
+
 endglobal
 
 #############
@@ -11,15 +18,15 @@ endglobal
 #############
 snippet wj "WikiJournal"
 ---
-title: `date +%Y-%m-%d`
-created: `date +%Y-%m-%d`
-modified: `date +%Y-%m-%d`
+title: `!p snip.rv=TODAY`
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
 type: journal
 ---
 
-# Todo | -event entry.before:`date -v +1d +%Y-%m-%d` due.before:`date -v +1d +%Y-%m-%d` (status:pending or end.after:`date +%Y-%m-%d`) | due:`date +%Y-%m-%d`T23:59:59
+# Todo | -event entry.before:`!p snip.rv=TOMOR` due.before:`!p snip.rv=TOMOR` (status:pending or end.after:`!p snip.rv=TODAY`) | due:`!p snip.rv=TODAY`T23:59:59
 
-# Events | +event entry.before:`date -v +1d +%Y-%m-%d` (status:pending or end.after:`date +%Y-%m-%d`) | +event
+# Events | +event entry.before:`!p snip.rv=TOMOR` (status:pending or end.after:`!p snip.rv=TODAY`) | +event
 
 # Log
 $0
@@ -30,9 +37,9 @@ endsnippet
 snippet ww "WikiWiki"
 ---
 title: `!p snip.rv=fname_to_str(snip.basename)`
-created: `date +%Y-%m-%d`
-modified: `date +%Y-%m-%d`
-datelink: [[`date +%Y-%m-%d`]]
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
 type: wiki
 summary: $1
 ---
@@ -43,9 +50,9 @@ endsnippet
 snippet wf "WikiFeed"
 ---
 title: `!p snip.rv=fname_to_str(snip.basename)`
-created: `date +%Y-%m-%d`
-modified: `date +%Y-%m-%d`
-datelink: [[`date +%Y-%m-%d`]]
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
 type: feed
 media: $1
 source: $2
@@ -61,9 +68,9 @@ endsnippet
 snippet wz "WikiZettel"
 ---
 title: `!p snip.rv=fname_to_str(snip.basename)`
-created: `date +%Y-%m-%d`
-modified: `date +%Y-%m-%d`
-datelink: [[`date +%Y-%m-%d`]]
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
 type: zettel
 summary: $1
 ---
@@ -74,9 +81,9 @@ endsnippet
 snippet wn "WikiTaskNote"
 ---
 title: `!p snip.rv=fname_to_str(snip.basename)`
-created: `date +%Y-%m-%d`
-modified: `date +%Y-%m-%d`
-datelink: [[`date +%Y-%m-%d`]]
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
 type: tasknote
 ---
 
