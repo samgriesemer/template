@@ -35,6 +35,34 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{tikz}
 \usepackage{tikz-qtree}
+\usetikzlibrary{shadows,arrows.meta,positioning,backgrounds,fit,chains,scopes,shapes}
+
+% code
+\usepackage{listings}
+\lstset{
+  %% text color and size %%
+  backgroundcolor=\color{lightgray},   % choose the background color
+  basicstyle=\footnotesize\color{darkgray},        % size of fonts used for the code
+  commentstyle=\color{base1},    % comment style
+  keywordstyle=\color{sred},       % keyword style
+  stringstyle=\color{scyan},     % string literal style
+  numberstyle=\scriptsize\color{black},
+  %% other styles %%
+  breaklines=true,                 % automatic line breaking only at whitespace
+  captionpos=b,                    % sets the caption-position to bottom
+  %escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  %% numbers %%
+  numbers=left,
+  stepnumber=1,
+  columns=fixed,
+  %numbersep=12pt,
+  %% frame %%
+  frame=lines,
+  framexleftmargin=1em,
+  framexrightmargin=1em,
+  xleftmargin=1em,
+  xrightmargin=1em
+}
 
 % plotting 
 \usepackage{pgfplots}
@@ -61,6 +89,26 @@
 \DeclareMathOperator{\E}{\mathbb{E}}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 \renewcommand{\vec}[1]{\mathbf{#1}} % overriding vector
+
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{conj}[theorem]{Conjecture}
+
+% colors
+\definecolor{lightgray}{rgb}{0.97, 0.97, 0.97}
+\definecolor{darkgray}{rgb}{0.15, 0.15, 0.15}
+
+\definecolor{base3}{HTML}{FDF6E3}
+\definecolor{base2}{HTML}{EEE8D5}
+\definecolor{base1}{HTML}{93A1A1}
+\definecolor{base00}{HTML}{657B83}
+\definecolor{base03}{HTML}{002b36}
+
+\definecolor{syellow}{HTML}{B58900}
+\definecolor{sorange}{HTML}{CB4B16}
+\definecolor{sred}{HTML}{DC322F}
+\definecolor{smagenta}{HTML}{d33682}
+\definecolor{sviolet}{HTML}{6c71c4}
+\definecolor{sblue}{HTML}{268BD2}
+\definecolor{scyan}{HTML}{2aa198}
+\definecolor{sgreen}{HTML}{859900}

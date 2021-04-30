@@ -1,0 +1,66 @@
+%\usepackage{fancyhdr}
+%\usepackage[utf8]{inputenc}
+%\usepackage[english]{babel}
+
+% fonts
+%\usepackage[T1]{fontenc}
+%\usepackage{kpfonts}
+%\usepackage[osf]{libertine}
+%\usepackage[scaled=0.8]{beramono}
+
+% packages
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{stmaryrd}
+\usepackage[shortlabels]{enumitem}
+\usepackage{graphicx}
+\graphicspath{{/}}
+
+% math packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{nicefrac}
+%\usepackage{minted}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+
+% plotting 
+\usepackage{pgfplots}
+\pgfplotsset{
+  compat=newest,
+  plot coordinates/math parser=false,
+  tick label style={font=\footnotesize, /pgf/number format/fixed},
+  label style={font=\small},
+  legend style={font=\small},
+  every axis/.append style={
+    tick align=outside,
+    clip mode=individual,
+    scaled ticks=false,
+    thick,
+    tick style={semithick, black}
+  }
+}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{dateplot}
+
+% custom math operators
+%\DeclareMathOperator*{\argmin}{\arg\!\min}
+%\DeclareMathOperator*{\argmax}{\arg\!\max}
+%\DeclareMathOperator{\E}{\mathbb{E}}
+%\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+%\renewcommand{\vec}[1]{\mathbf{#1}} % overriding vector
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{conj}[theorem]{Conjecture}
