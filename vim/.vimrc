@@ -11,6 +11,7 @@ set background=dark
 set conceallevel=2
 set timeoutlen=600
 set ttimeoutlen=50
+set belloff=all
 
 set wrap
 set linebreak
@@ -88,6 +89,8 @@ Plug 'junegunn/fzf.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'lua', 'vim', 'python']}
 "Plug 'psf/black'
 
+Plug 'dhruvasagar/vim-table-mode'
+
 " end plugin list, initialize system
 call plug#end()
 
@@ -149,7 +152,8 @@ endfunction
 "" Taskwiki config ""
 let g:taskwiki_markup_syntax = 'markdown'
 let g:taskwiki_sort_order = 'status-,urgency-'
-let g:taskwiki_dont_preserve_folds = 1
+let g:taskwiki_note_path = '/home/smgr/Documents/notes/tasks/'
+"let g:taskwiki_dont_preserve_folds = 1
 
 "" coc.nvim ""
 let g:coc_disable_startup_warning = 1
@@ -161,7 +165,6 @@ let g:coc_disable_startup_warning = 1
 "nmap <silent> gy <Plug>(coc-type-definition)
 "nmap <silent> gi <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
-
 
 let g:coc_global_extensions = ['coc-pyright', 'coc-tsserver', 'coc-html'
             "\ 'coc-eslint', 'coc-prettier',
@@ -220,7 +223,7 @@ highlight clear SignColumn
 highlight VertSplit guibg=bg ctermbg=bg 
 
 " Transparent bg to match terminal, comes at end to ensure hi isn't overwritten
-"hi Normal guibg=NONE ctermbg=NONE
+hi Normal guibg=NONE ctermbg=NONE
 
 " Italic comments
 highlight Comment cterm=italic

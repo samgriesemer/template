@@ -1,0 +1,99 @@
+priority -50
+
+global !p
+from datetime import datetime, timedelta
+def fname_to_str(fname):
+	return fname.replace('_', ' ')
+
+def day(base=None, shift=0):
+	if base is None:
+		base = datetime.now()
+	else:
+		base = datetime.strptime(base, '%Y-%m-%d')
+	return (base+timedelta(shift)).strftime('%Y-%m-%d')
+
+def dt(name, shift=0):
+	return day(fname_to_str(name), shift)
+
+TODAY=day()
+TOMOR=day(shift=1)
+
+endglobal
+
+#############
+# TEMPLATES #
+#############
+snippet wj "WikiJournal"
+---
+title: `!p snip.rv=dt(snip.basename)`
+created: `!p snip.rv=dt(snip.basename)`
+modified: `!p snip.rv=dt(snip.basename)`
+type: journal
+---
+
+# Todo | -event entry.before:`!p snip.rv=dt(snip.basename,1)` due.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) | due:`!p snip.rv=dt(snip.basename)`T23:59:59
+
+# Events | +event entry.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) | +event
+
+# Log
+$0
+
+# Thoughts
+endsnippet
+
+snippet ww "WikiWiki"
+---
+title: `!p snip.rv=fname_to_str(snip.basename)`
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
+type: wiki
+summary: $1
+---
+
+$0
+endsnippet
+
+snippet wf "WikiFeed"
+---
+title: `!p snip.rv=fname_to_str(snip.basename)`
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
+type: feed
+media: $1
+source: $2
+volume: $3
+files:
+tags: $4
+url: ${5:`!v getreg("*")`}
+---
+
+$0
+endsnippet
+
+snippet wz "WikiZettel"
+---
+title: `!p snip.rv=fname_to_str(snip.basename)`
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
+type: zettel
+summary: $1
+---
+
+$0
+endsnippet
+
+snippet wn "WikiTaskNote"
+---
+title: `!p snip.rv=fname_to_str(snip.basename)`
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
+type: tasknote
+---
+
+$0
+endsnippet
+# vim:ft=snippets:
