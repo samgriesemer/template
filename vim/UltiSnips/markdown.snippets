@@ -5,11 +5,18 @@ from datetime import datetime, timedelta
 def fname_to_str(fname):
 	return fname.replace('_', ' ')
 
-def day(shift=0):
-	return (datetime.now()+timedelta(shift)).strftime('%Y-%m-%d')
+def day(base=None, shift=0):
+	if base is None:
+		base = datetime.now()
+	else:
+		base = datetime.strptime(base, '%Y-%m-%d')
+	return (base+timedelta(shift)).strftime('%Y-%m-%d')
+
+def dt(name, shift=0):
+	return day(fname_to_str(name), shift)
 
 TODAY=day()
-TOMOR=day(1)
+TOMOR=day(shift=1)
 
 endglobal
 
@@ -18,15 +25,15 @@ endglobal
 #############
 snippet wj "WikiJournal"
 ---
-title: `!p snip.rv=TODAY`
-created: `!p snip.rv=TODAY`
-modified: `!p snip.rv=TODAY`
+title: `!p snip.rv=dt(snip.basename)`
+created: `!p snip.rv=dt(snip.basename)`
+modified: `!p snip.rv=dt(snip.basename)`
 type: journal
 ---
 
-# Todo | -event entry.before:`!p snip.rv=TOMOR` due.before:`!p snip.rv=TOMOR` (status:pending or end.after:`!p snip.rv=TODAY`) | due:`!p snip.rv=TODAY`T23:59:59
+# Todo | -event entry.before:`!p snip.rv=dt(snip.basename,1)` due.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) | due:`!p snip.rv=dt(snip.basename)`T23:59:59
 
-# Events | +event entry.before:`!p snip.rv=TOMOR` (status:pending or end.after:`!p snip.rv=TODAY`) | +event
+# Events | +event entry.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) | +event
 
 # Log
 $0
@@ -89,9 +96,4 @@ type: tasknote
 
 $0
 endsnippet
-
-snippet col "WikiColor"
-<span style='color:$1'>${VISUAL}$2</span>$0
-endsnippet
-
 # vim:ft=snippets:
