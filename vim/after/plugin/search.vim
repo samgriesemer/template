@@ -13,16 +13,25 @@ let rg_base = 'rg --column --line-number --no-heading --color=always --smart-cas
 
 " general fzf search with preview
 function FzfGrepPreview(cmd, pat, loc, qry, bng)
-    call fzf#vim#grep(a:cmd.' '.a:pat.' '.a:loc, 1,
-    \   fzf#vim#with_preview({
+    let spec = fzf#vim#with_preview({
     \       'options': [
+    \           '--prompt', 'Lines> ',
+    \           '--ansi',
+    \           '--extended',
     \           '--delimiter=:',
-    \           '--with-nth=4..',
-    \           '--nth=1..',
+    \           '--nth='.3.'..',
+    \           '--with-nth=1,2,4..',
     \           '--query='.a:qry,
     \       ],
     \       'right': '50%'
-    \   }, 'down:50%:wrap'), a:bng)
+    \   }, 'down:50%:wrap')
+
+    "call extend(spec, {
+    "\       'sink*': function('s:line_handler'),
+    "\   })
+
+    call fzf#vim#grep(a:cmd.' '.a:pat.' '.a:loc, 1, spec, a:bng)
+    "call fzf#vim#grep('cd '.a:loc.' && 'a:cmd.' '.a:pat.' r', 1, spec, a:bng)
 endfunction
 
 " DirFzfFiles - search current directory filenames and go to file
@@ -34,5 +43,10 @@ command! -bang -nargs=? -complete=dir DirFzfFiles
 " using the first argument, which is a string used for the initial ripgrep
 " exact search.
 command! -bang -nargs=* DirFzfLines
-    \ call FzfGrepPreview(rg_base, shellescape(<q-args>), '.', <q-args>, <bang>0)
+    \ call FzfGrepPreview(rg_base, shellescape(<q-args>), '*', <q-args>, <bang>0)
+
+    "\           '--delimiter=:',
+    "\           '--with-nth=4..',
+    "\           '--nth=1..',
+    "\           '--query='.a:qry,
 

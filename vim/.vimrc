@@ -20,12 +20,15 @@ set breakindent
 set autoindent
 set incsearch
 set hlsearch
+set hidden
 set shortmess-=S
 set textwidth=90
 set display+=lastline
 set fillchars+=vert:\▏
-filetype plugin indent off
+filetype plugin on
+filetype indent off
 colorscheme solarized
+"colorscheme gruvbox
 
 syntax enable
 set spell
@@ -77,6 +80,7 @@ Plug 'dkarter/bullets.vim'
 "" Wiki ""
 Plug 'samgriesemer/wiki.vim'
 Plug 'samgriesemer/vim-roam'
+Plug 'samgriesemer/vim-roam-search'
 
 "" Taskwiki ""
 Plug 'samgriesemer/vim-roam-task'
@@ -90,6 +94,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'lua', 'vim', 'p
 "Plug 'psf/black'
 
 Plug 'dhruvasagar/vim-table-mode'
+
+Plug 'skywind3000/asyncrun.vim'
 
 " end plugin list, initialize system
 call plug#end()
@@ -130,14 +136,23 @@ let g:markdown_folding=1
 "" Wiki ""
 let g:wiki_root = '~/Documents/notes'
 let g:wiki_filetypes = ['md']
-"let g:wiki_map_create_page = 'StringToFname'
-"let g:wiki_map_visit_link = 'StringToFname'
 let g:wiki_write_on_nav = 1
-"let g:wiki_mappings_local = {
-"    \ '<plug>(wiki-graph-find-backlinks)' : '<Leader>wlb',
-"    \ '<plug>(wiki-link-toggle)' : '<Leader>wlt',
-"    \ '<plug>(wiki-page-toc)' : '<Leader>wpt'
-"\ }
+let g:wiki_journal = {
+      \ 'name' : '',
+      \ 'frequency' : 'daily',
+      \ 'date_format' : {
+      \   'daily' : '%Y-%m-%d',
+      \   'monthly' : '%Y-%m',
+      \   'yearly' : '%Y',
+      \ },
+\}
+let g:wiki_mappings_local = {
+    \ '<plug>(wiki-link-toggle)' : '<Leader>wlt',
+    \ '<plug>(wiki-fzf-toc)' : '<leader>wt',
+    \ '<plug>(wiki-page-toc)' : '<Leader>wpt',
+    \ '<plug>(wiki-journal-toweek)' : '<Leader>wjt',
+   \ '<plug>(wiki-graph-find-backlinks)' : '<Leader>wlb',
+\ }
 
 let g:wiki_file_open = 'WikiFileOpen'
 
@@ -152,7 +167,7 @@ endfunction
 "" Taskwiki config ""
 let g:taskwiki_markup_syntax = 'markdown'
 let g:taskwiki_sort_order = 'status-,urgency-'
-let g:taskwiki_note_path = '/home/smgr/Documents/notes/tasks/'
+let g:taskwiki_task_path = 'tasks'
 "let g:taskwiki_dont_preserve_folds = 1
 
 "" coc.nvim ""
@@ -166,7 +181,7 @@ let g:coc_disable_startup_warning = 1
 "nmap <silent> gi <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
 
-let g:coc_global_extensions = ['coc-pyright', 'coc-tsserver', 'coc-html'
+let g:coc_global_extensions = ['coc-pyright', 'coc-tsserver', 'coc-html', 'coc-omni'
             "\ 'coc-eslint', 'coc-prettier',
             "\ 'coc-css', 'coc-json', 'coc-yaml'
             \ ]
@@ -242,6 +257,12 @@ noremap <Down>  <Nop>
 noremap <Left>  <Nop>
 noremap <Right> <Nop>
 
+" window movement remap
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
 " NERDTree map
 nmap <Leader>d :NERDTreeToggle<CR>
 
@@ -267,4 +288,3 @@ vmap <C-c> "+y
 
 " open map (temporary, needs to be a site spec in vim-roam)
 nmap <Leader>wo :call system('firefox -new-tab "localhost:8000/' . expand('%:p:t:r') . '.html"')<CR>
-
