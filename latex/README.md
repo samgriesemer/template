@@ -13,3 +13,17 @@ Use the `pandoc-template.tex`. The options:
       properly escape everything, namely inline code objects exemplifying commands (it
       seems).
 - `--pdf-engine`: for now, set to `xelatex`
+
+## New: closer to default Pandoc w/ kpfonts
+The command
+
+```bash
+pandoc -N 
+    --highlight-style tango 
+    --template=../default_mod.tex 
+    --variable csquotes 
+    --variable geometry="margin=1.3in" thompson.md 
+    --pdf-engine=xelatex 
+    -t latex
+    -o thompson.pdf
+```
