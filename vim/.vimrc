@@ -72,18 +72,18 @@ Plug 'morhetz/gruvbox'
 
 "" Markdown ""
 Plug 'godlygeek/tabular'
-Plug 'samgriesemer/vim-roam-md'
+Plug 'https://git.samgriesemer.com/samgriesemer/vim-roam-md'
 
 "" Lists ""
 Plug 'dkarter/bullets.vim'
 
 "" Wiki ""
-Plug 'samgriesemer/wiki.vim'
-Plug 'samgriesemer/vim-roam'
-Plug 'samgriesemer/vim-roam-search'
+Plug 'https://git.samgriesemer.com/samgriesemer/wiki.vim'
+Plug 'https://git.samgriesemer.com/samgriesemer/vim-roam'
+Plug 'https://git.samgriesemer.com/samgriesemer/vim-roam-search'
 
 "" Taskwiki ""
-Plug 'samgriesemer/vim-roam-task'
+Plug 'https://git.samgriesemer.com/samgriesemer/vim-roam-task'
 
 "" fzf ""
 Plug '~/.fzf' "make sure fzf installed (along with ripgrep)
@@ -96,6 +96,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'lua', 'vim', 'p
 Plug 'dhruvasagar/vim-table-mode'
 
 Plug 'skywind3000/asyncrun.vim'
+
 
 " end plugin list, initialize system
 call plug#end()
@@ -154,15 +155,62 @@ let g:wiki_mappings_local = {
    \ '<plug>(wiki-graph-find-backlinks)' : '<Leader>wlb',
 \ }
 
-let g:wiki_file_open = 'WikiFileOpen'
+let g:wiki_map_create_page = 'StringToFname'
+"let g:wiki_map_link2file   = 'StringToFname'
+function! StringToFname(str)
+    return substitute(a:str,' ','_','g')
+endfunction
 
+let g:wiki_map_file2link   = 'FnameToString'
+function! FnameToString(fname)
+    return substitute(a:fname,'_',' ','g')
+endfunction
+
+let g:wiki_resolver = 'WikiResolver'
+function! WikiResolver(fname, origin)
+  if empty(a:fname) | return a:origin | endif
+
+  let l:file = a:fname
+  if fnamemodify(l:file, ':e') == 'md'
+      let l:file = fnamemodify(l:file, ':r')
+  endif
+  let l:file = StringToFname(l:file)
+  return simplify(wiki#get_root().'/'.l:file.'.md')
+endfunction
+
+
+" has to be actual file url type ie file:<>
+let g:wiki_file_handler = 'WikiFileOpen'
 function! WikiFileOpen(...) abort dict
   if self.path =~# 'pdf$'
-    silent execute '!zathura' fnameescape(self.path) '&'
+    let l:cmd = '!zathura '.fnameescape(self.path)
+    if get(self, 'page')
+        let l:cmd .= ' -P '.string(self.page)
+    endif
+    silent execute l:cmd.' &'
     return 1
   endif
   return 0
 endfunction
+
+"" Vim-roam ""
+let g:roam_search_wrap_link = 'WrapLink'
+function! WrapLink(lines)
+    "call feedkeys('A')
+    let l:link = join(a:lines)
+    let l:link = FnameToString(l:link)
+    let l:link = '[['.l:link.']]'
+
+    if getcurpos()[2]+strlen(l:link) > &tw
+        let l:spacing = repeat(' ', &tw - getcurpos()[2])
+        let l:link = l:spacing . l:link
+    endif
+
+    " get link string for path (assumed relative to wiki root)
+    return l:link
+endfunction
+
+
 
 "" Taskwiki config ""
 let g:taskwiki_markup_syntax = 'markdown'
@@ -288,3 +336,4 @@ vmap <C-c> "+y
 
 " open map (temporary, needs to be a site spec in vim-roam)
 nmap <Leader>wo :call system('firefox -new-tab "localhost:8000/' . expand('%:p:t:r') . '.html"')<CR>
+

@@ -85,7 +85,7 @@ summary: $1
 $0
 endsnippet
 
-snippet wn "WikiTaskNote"
+snippet wn "wikitasknote"
 ---
 title: `!p snip.rv=fname_to_str(snip.basename)`
 created: `!p snip.rv=TODAY`
@@ -96,4 +96,20 @@ type: tasknote
 
 $0
 endsnippet
+
+snippet wp "wikiproject"
+---
+title: `!p snip.rv=fname_to_str(snip.basename)`
+created: `!p snip.rv=TODAY`
+modified: `!p snip.rv=TODAY`
+datelink: [[`!p snip.rv=TODAY`]]
+type: project
+status: ${1:active}
+code: ${2:`!v getreg("*")`}
+summary: 
+---
+
+$0
+endsnippet
+
 # vim:ft=snippets:
