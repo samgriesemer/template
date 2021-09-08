@@ -378,10 +378,10 @@ $else$
 \pagestyle{fancy}
 \fancyhf{}
 %\lhead{\textbf{$name$}}
-\lhead{\textbf{$assignment$}}
+\lhead{\textscsl{\textbf{$assignment$}}}
 %\chead{\textsc{$assignment$}}
 %\rhead{\textsc{\textbf{\textit{\nouppercase\leftmark}}}}
-\rhead{\textscsl{\nouppercase\leftmark}}
+\rhead{\fontfamily{jkpos}\textscsl{\textbf{\nouppercase\leftmark}}}
 %\setlength\parindent{0pt} 
 $endif$
 
@@ -466,7 +466,7 @@ $if(csquotes)$
 $endif$
 
 $if(title)$
-\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+\title{\textbf{$title$}$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 $if(subtitle)$
 $if(beamer)$
@@ -478,7 +478,7 @@ $else$
 }
 \makeatother
 $endif$
-\subtitle{$subtitle$}
+\subtitle{\fontfamily{jkpos}\textscsl{$subtitle$}}
 $endif$
 \author{$for(author)$$author$$sep$ \and $endfor$}
 \date{$date$}
@@ -498,11 +498,42 @@ $endif$
 \usepackage{titlesec}
 \titleformat{\section}[block]
   {\bfseries}
+  % cant quite figure out scsl sections here
   {\textup{\thesection}} % label
   {0.5em}%                sep
   {}%                     before
   %[\rule{\textwidth}{0.44pt}]
   [\titlerule]%           after
+
+% found https://www.tug.org/TUGboat/tb19-2/tb59gibb.pdf
+\def\dashedrule#1#2#3{{%
+% #1 is length of dash
+% #2 is length of gap between dashes
+% #3 is number of dashes
+\dimen1=#2 \divide\dimen1 by 2
+\def\@ruledash{%
+\rule{\dimen1}{0pt}%
+\rule[0.0ex]{#1}{0.4pt}%
+% line is 0.5ex above the baseline
+% and 0.4pt thick
+\rule{\dimen1}{0pt}}%
+\count1=0
+\loop%
+\ifnum\count1<#3%
+\advance\count1 by 1%
+\@ruledash%
+\repeat}}
+\def\shortdashes{\dashedrule{.125em}{.125em}{170}}
+ 
+
+\titleformat{\subsection}[block]
+  {\bfseries\itshape}
+  %% cant quite figure out scsl sections here
+  {\textit{\textup{\thesubsection}}} % label
+  {0.5em}%                sep
+  {}%                     before
+  %%[\rule{\textwidth}{0.44pt}]
+  []%           after
 
 \begin{document}
 $if(has-frontmatter)$
