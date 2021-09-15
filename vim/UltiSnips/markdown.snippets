@@ -105,10 +105,23 @@ modified: `!p snip.rv=TODAY`
 datelink: [[`!p snip.rv=TODAY`]]
 type: project
 status: ${1:active}
-code: ${2:`!v getreg("*")`}
+code: ${2:`!p snip.rv="https://github.com/samgriesemer/"+snip.basename`}
 summary: 
 ---
 
+# TODO | proj:`!p snip.rv=snip.basename` status:pending
+
+
+# CHANGELOG | proj:`!p snip.rv=snip.basename` status:completed
+
+
+# Description
+$3
+
+# Philosophy
+$4
+
+# Usage
 $0
 endsnippet
 
