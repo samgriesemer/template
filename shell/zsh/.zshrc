@@ -6,12 +6,14 @@ export ZSH="/home/smgr/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes #ZSH_THEME="robbyrussell"
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+#ZSH_THEME="robbyrussell"
 ZSH_THEME="custom"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
-# a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
+# a theme from this variable instead of looking in $ZSH/themes/
 # If set to an empty array, this variable will have no effect.
 # ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
@@ -32,7 +34,7 @@ ZSH_THEME="custom"
 # export UPDATE_ZSH_DAYS=13
 
 # Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS=true
+# DISABLE_MAGIC_FUNCTIONS="true"
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -44,6 +46,8 @@ ZSH_THEME="custom"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
+# Caution: this setting can cause issues with multiline prompts (zsh 5.7.1 and newer seem to work)
+# See https://github.com/ohmyzsh/ohmyzsh/issues/5765
 # COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
@@ -63,13 +67,11 @@ ZSH_THEME="custom"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load?
-# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  git
-)
+plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -101,8 +103,8 @@ source $ZSH/oh-my-zsh.sh
 
 # OPENING DISPLAY #
 ## GAMES ##
-if [ -x /usr/games/cowsay -a -x /usr/games/fortune -a -x /usr/games/lolcat ]; then
-  fortune -a | cowsay -f $(ls /usr/share/cowsay/cows/ | shuf -n1) | lolcat
+if [ -x /usr/bin/cowsay -a -x /usr/bin/fortune -a -x /usr/bin/lolcat ]; then
+  fortune -a | cowsay -f $(ls /usr/share/cows/ | shuf -n1) | lolcat
 fi
 
 echo '\n'
@@ -118,10 +120,9 @@ bindkey "^[OA" history-beginning-search-backward
 bindkey "^[OB" history-beginning-search-forward
 
 ## TIMEWARRIOR ##
-export TIMEWARRIORDB=$HOME/Nextcloud/.timewarrior
+#export TIMEWARRIORDB=$HOME/Nextcloud/.timewarrior
 
-## fzf ##
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export EDITOR='vim'
 
 #export FZF_DEFAULT_OPTS="
 #--color info:254,prompt:37,spinner:108,pointer:235,marker:235
@@ -131,14 +132,14 @@ export TIMEWARRIORDB=$HOME/Nextcloud/.timewarrior
 ## BAT ##
 export BAT_THEME='Solarized (dark)'
 
+## MEM CONFIG ##
+#export MEM_DB_PATH='/home/smgr/Documents/data/mem/decks.sqlite'
+
 ## FIX GLOB ##
 unsetopt nomatch
 
 ## RUST ##
-export PATH="$HOME/.cargo/bin:$PATH"
-
-## ANKI UI FIX ##
-export ANKI_NOHIGHDPI=1
+#export PATH="$HOME/.cargo/bin:$PATH"
 
 # convenient open
 alias open="xdg-open"
@@ -146,8 +147,57 @@ alias open="xdg-open"
 # always run iPython in vim mode
 alias ipython="ipython --TerminalInteractiveShell.editing_mode=vi"
 
-PATH="/home/smgr/perl5/bin${PATH:+:${PATH}}"; export PATH;
-PERL5LIB="/home/smgr/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
-PERL_LOCAL_LIB_ROOT="/home/smgr/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
-PERL_MB_OPT="--install_base \"/home/smgr/perl5\""; export PERL_MB_OPT;
-PERL_MM_OPT="INSTALL_BASE=/home/smgr/perl5"; export PERL_MM_OPT;
+## fzf ##
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
+
+### fzf asnd rga ###
+rga-fzf() {
+	RG_PREFIX="rga"
+	local file
+	file="$(
+		FZF_DEFAULT_COMMAND="$RG_PREFIX '$1'" \
+			fzf --sort --preview="[[ ! -z {} ]] && rga --pretty --context 5 {q} {}" \
+				--phony -q "$1" \
+				--bind "change:reload:$RG_PREFIX {q}" \
+				--preview-window="70%:wrap"
+	)" &&
+	echo "opening $file" &&
+	xdg-open "$file"
+}
+
+## add local bin to path ##
+export PATH="${PATH}:/home/smgr/.local/bin"
+
+## firefox alias
+alias firefox="firefox-developer-edition"
+
+## pandoc latex building for now
+md2pdf() {
+  pandoc -N \
+    --highlight-style tango \
+    --template=/home/smgr/Documents/projects/templates/latex/pandoc/article_template.tex \
+    --variable csquotes \
+    --variable geometry="margin=1.3in" \
+    --pdf-engine=xelatex \
+    $1 \
+    -o $2
+}
+
+mkhw() {
+  pandoc \
+    --highlight-style tango \
+    --template=/home/smgr/Documents/projects/templates/latex/pandoc/hw_template.tex \
+    --variable csquotes \
+    --variable geometry="margin=1.0in" \
+    --pdf-engine=xelatex \
+    -t latex \
+    $1 \
+    -o ${1%.*}.pdf
+}
+
+#PATH="/home/smgr/perl5/bin${PATH:+:${PATH}}"; export PATH;
+#PERL5LIB="/home/smgr/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+#PERL_LOCAL_LIB_ROOT="/home/smgr/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+#PERL_MB_OPT="--install_base \"/home/smgr/perl5\""; export PERL_MB_OPT;
+#PERL_MM_OPT="INSTALL_BASE=/home/smgr/perl5"; export PERL_MM_OPT;

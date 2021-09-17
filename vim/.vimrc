@@ -7,7 +7,6 @@ set number
 set tabstop=4
 set shiftwidth=4
 set expandtab
-set background=dark
 set conceallevel=2
 set timeoutlen=600
 set ttimeoutlen=50
@@ -27,13 +26,16 @@ set display+=lastline
 set fillchars+=vert:\▏
 filetype plugin on
 filetype indent off
-colorscheme solarized
+
+set termguicolors
+set background=dark
+"colorscheme solarized_og
+colorscheme flattened_dark
 "colorscheme gruvbox
 
 syntax enable
 set spell
 set spelllang=en_us
-highlight SpellBad cterm=underline
 
 
 """"""""""""""""""""""""
@@ -65,7 +67,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 "" Solarized color scheme ""
-Plug 'altercation/vim-colors-solarized'
+"Plug 'altercation/vim-colors-solarized'
+Plug 'lifepillar/vim-solarized8'
 
 "" GruvBox color scheme ""
 Plug 'morhetz/gruvbox'
@@ -78,6 +81,7 @@ Plug 'https://git.samgriesemer.com/samgriesemer/vim-roam-md'
 Plug 'dkarter/bullets.vim'
 
 "" Wiki ""
+Plug 'skywind3000/asyncrun.vim'
 Plug 'https://git.samgriesemer.com/samgriesemer/wiki.vim'
 Plug 'https://git.samgriesemer.com/samgriesemer/vim-roam'
 Plug 'https://git.samgriesemer.com/samgriesemer/vim-roam-search'
@@ -95,9 +99,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['json', 'lua', 'vim', 'p
 
 Plug 'dhruvasagar/vim-table-mode'
 
-Plug 'skywind3000/asyncrun.vim'
-
-
 " end plugin list, initialize system
 call plug#end()
 
@@ -112,12 +113,12 @@ let g:airline#extensions#coc#enabled=1
 let g:UltiSnipsExpandTrigger = '<tab>'
 let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
-let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsEditSplit = 'vertical'
 
 "" VimTex configuration ""
-let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
+let g:tex_flavor = 'latex'
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_quickfix_mode = 0
 
 "" TeX-conceal configuration ""
 let g:tex_conceal='abdmg'
@@ -126,13 +127,13 @@ let g:tex_conceal='abdmg'
 let NERDTreeMinimalUI=1
 
 "" Vim-markdown plugin config ""
-let g:vim_markdown_math=1
-let g:vim_markdown_folding_disabled=1
-let g:vim_markdown_auto_insert_bullets=0
-let g:vim_markdown_new_list_item_indent=0
+let g:vim_markdown_math = 1
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_auto_insert_bullets = 0
+let g:vim_markdown_new_list_item_indent = 0
 
 "" Base markdown settings (tpope) ""
-let g:markdown_folding=1
+let g:markdown_folding = 1
 
 "" Wiki ""
 let g:wiki_root = '~/Documents/notes'
@@ -152,21 +153,22 @@ let g:wiki_mappings_local = {
     \ '<plug>(wiki-fzf-toc)' : '<leader>wt',
     \ '<plug>(wiki-page-toc)' : '<Leader>wpt',
     \ '<plug>(wiki-journal-toweek)' : '<Leader>wjt',
-   \ '<plug>(wiki-graph-find-backlinks)' : '<Leader>wlb',
+    \ '<plug>(wiki-graph-find-backlinks)' : '<Leader>wlb',
 \ }
+let g:wiki_map_create_page = 'StringToFname'  " used through with `wn`
+let g:wiki_map_file2link = 'FnameToString'    " file to link map, for renaming
+let g:wiki_resolver = 'WikiResolver'          " transform link to filename
+let g:wiki_file_handler = 'WikiFileOpen'      " handle wiki `file:` opening
+let g:wiki_post_page_open = 'WikiPostOpen'    " callback after page open
 
-let g:wiki_map_create_page = 'StringToFname'
-"let g:wiki_map_link2file   = 'StringToFname'
 function! StringToFname(str)
     return substitute(a:str,' ','_','g')
 endfunction
 
-let g:wiki_map_file2link   = 'FnameToString'
 function! FnameToString(fname)
     return substitute(a:fname,'_',' ','g')
 endfunction
 
-let g:wiki_resolver = 'WikiResolver'
 function! WikiResolver(fname, origin)
   if empty(a:fname) | return a:origin | endif
 
@@ -178,9 +180,6 @@ function! WikiResolver(fname, origin)
   return simplify(wiki#get_root().'/'.l:file.'.md')
 endfunction
 
-
-" has to be actual file url type ie file:<>
-let g:wiki_file_handler = 'WikiFileOpen'
 function! WikiFileOpen(...) abort dict
   if self.path =~# 'pdf$'
     let l:cmd = '!zathura '.fnameescape(self.path)
@@ -193,8 +192,27 @@ function! WikiFileOpen(...) abort dict
   return 0
 endfunction
 
+function! WikiPostOpen(fname)
+    let l:fnew = !filereadable(expand('%'))
+    "let l:fnew = filereadable(a:fname)
+
+    " snippets for new files
+    if l:fnew
+      if a:fname =~# 'task-[a-z0-9]\{8\}.md'
+        normal! iwn 
+        call UltiSnips#ExpandSnippet()
+      endif
+      if a:fname =~# '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}'
+        normal! iwj 
+        call UltiSnips#ExpandSnippet()
+      endif
+    endif
+endfunction
+
+
 "" Vim-roam ""
 let g:roam_search_wrap_link = 'WrapLink'
+
 function! WrapLink(lines)
     "call feedkeys('A')
     let l:link = join(a:lines)
@@ -210,13 +228,29 @@ function! WrapLink(lines)
     return l:link
 endfunction
 
-
+let g:fzf_colors =                                                                         
+    \ { 'fg':      ['fg', 'Normal'],                                                           
+      \ 'bg':      ['bg', 'Normal'],                                                           
+      \ 'hl':      ['fg', 'Comment'],                                                          
+      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],                             
+      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],                                       
+      \ 'hl+':     ['fg', 'Statement'],                                                        
+      \ 'info':    ['fg', 'PreProc'],                                                          
+      \ 'border':  ['fg', 'Ignore'],                                                           
+      \ 'prompt':  ['fg', 'Conditional'],                                                      
+      \ 'pointer': ['fg', 'Exception'],                                                        
+      \ 'marker':  ['fg', 'Keyword'],                                                          
+      \ 'spinner': ['fg', 'Label'],                                                            
+      \ 'header':  ['fg', 'Comment'] } 
 
 "" Taskwiki config ""
 let g:taskwiki_markup_syntax = 'markdown'
 let g:taskwiki_sort_order = 'status-,urgency-'
-let g:taskwiki_task_path = 'tasks'
+let g:taskwiki_task_note_metadata = 1
+let g:taskwiki_disable_concealcursor = 1
+"let g:taskwiki_task_root = 'tasks'
 "let g:taskwiki_dont_preserve_folds = 1
+"
 
 "" coc.nvim ""
 let g:coc_disable_startup_warning = 1
@@ -281,12 +315,21 @@ endfunction
 au BufRead,BufNewFile *.md filetype indent off
 au BufRead,BufNewFile *.md setlocal spell
 au FileType markdown setlocal foldlevel=99
+
+" general appearance
 highlight clear LineNr
 highlight clear SignColumn
-highlight VertSplit guibg=bg ctermbg=bg 
+highlight clear VertSplit
+
+highlight clear SpellCap
+highlight clear SpellBad
+highlight clear SpellRare
+highlight clear SpellLocal
+
+highlight SpellBad cterm=underline
 
 " Transparent bg to match terminal, comes at end to ensure hi isn't overwritten
-hi Normal guibg=NONE ctermbg=NONE
+"highlight Normal guibg=NONE ctermbg=NONE
 
 " Italic comments
 highlight Comment cterm=italic
@@ -314,26 +357,47 @@ nnoremap <C-l> <C-w>l
 " NERDTree map
 nmap <Leader>d :NERDTreeToggle<CR>
 
-" general search
+" general search, commands from `.vim/after`
 nmap <Leader>df :DirFzfFiles<CR>
 nmap <Leader>dl :DirFzfLines<CR>
-
-" wiki search
-"nmap <Leader>wf :WikiFzfFiles<CR>
-"nmap <Leader>wl :WikiFzfLines<CR>
-"nmap <Leader>wb :WikiFzfBacklinks<CR>
-"nmap <Leader>wb :RoamBacklinkBuffer<CR>
-"nmap <Leader>wu :WikiFzfUnlinks<CR>
-
-" wiki in-page TOC search
-"nmap <Leader>wt :WikiFzfToc<CR>
 
 " tabular formatted tables
 inoremap <silent> <Bar>   <Bar><Esc>:call TableAlign()<CR>a
 
-" copy map
+" easy copying
 vmap <C-c> "+y
 
-" open map (temporary, needs to be a site spec in vim-roam)
-nmap <Leader>wo :call system('firefox -new-tab "localhost:8000/' . expand('%:p:t:r') . '.html"')<CR>
+" open current page name as HTML file using `xdg-open`
+nmap <Leader>wo :call system('xdg-open "http://localhost:8000/' . expand('%:p:t:r') . '.html"')<CR>
 
+" make homework mappings
+let s:hw_enabled=0
+let g:asyncrun_stop = 1
+
+function! MakeHomework(file, open)
+    let l:opt = {}
+    if a:open
+        let l:opt = {'post': 'call OpenHomework()'}
+    endif
+
+    if s:hw_enabled
+        call asyncrun#run('', l:opt, 'source /home/smgr/.zshrc && mkhw '.a:file)
+    endif
+endfunction
+
+function! ToggleHomework()
+    if s:hw_enabled
+        let s:hw_enabled = 0
+    else
+        let s:hw_enabled = 1
+        call MakeHomework(expand('%'), 1)
+    endif
+endfunction
+
+function! OpenHomework()
+    silent exe '!zathura '.expand('%:r').'.pdf &'
+    redraw!
+endfunction
+
+nmap <Leader>hw :call ToggleHomework()<CR>
+autocmd BufWritePost *.md call MakeHomework(expand('%'), 0)

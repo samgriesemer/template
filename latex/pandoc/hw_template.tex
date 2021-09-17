@@ -13,6 +13,7 @@ $if(CJKmainfont)$
 \PassOptionsToPackage{space}{xeCJK}
 $endif$
 %
+%
 \documentclass[
 $if(fontsize)$
   $fontsize$,
@@ -36,6 +37,52 @@ $for(classoption)$
   $classoption$$sep$,
 $endfor$
 ]{$documentclass$}
+
+
+% added packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{nicefrac}
+%\usepackage{minted}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{shadows,arrows.meta,positioning,backgrounds,fit,chains,scopes,shapes}
+
+\usepackage{pgfplots}
+\pgfplotsset{
+  compat=newest,
+  plot coordinates/math parser=false,
+  tick label style={font=\footnotesize, /pgf/number format/fixed},
+  label style={font=\small},
+  legend style={font=\small},
+  every axis/.append style={
+    tick align=outside,
+    clip mode=individual,
+    scaled ticks=false,
+    thick,
+    tick style={semithick, black}
+  }
+}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{dateplot}
+
+% custom math operators
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\renewcommand{\vec}[1]{\mathbf{#1}} % overriding vector
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{conj}[theorem]{Conjecture}
+
+
 $if(beamer)$
 $if(background-image)$
 \usebackgroundtemplate{%
@@ -93,28 +140,13 @@ $endif$
 $if(fontfamily)$
 \usepackage[$for(fontfamilyoptions)$$fontfamilyoptions$$sep$,$endfor$]{$fontfamily$}
 $else$
-\usepackage{lmodern}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{kpfonts}
 $endif$
 $if(linestretch)$
 \usepackage{setspace}
 $endif$
-\usepackage{iftex}
-\ifPDFTeX
-  \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-\else % if luatex or xetex
-$if(mathspec)$
-  \ifXeTeX
-    \usepackage{mathspec}
-  \else
-    \usepackage{unicode-math}
-  \fi
-$else$
-  \usepackage{unicode-math}
-$endif$
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 $if(mainfont)$
   \setmainfont[$for(mainfontoptions)$$mainfontoptions$$sep$,$endfor$]{$mainfont$}
 $endif$
@@ -124,9 +156,6 @@ $endif$
 $if(monofont)$
   \setmonofont[$for(monofontoptions)$$monofontoptions$$sep$,$endfor$]{$monofont$}
 $endif$
-$for(fontfamilies)$
-  \newfontfamily{$fontfamilies.name$}[$for(fontfamilies.options)$$fontfamilies.options$$sep$,$endfor$]{$fontfamilies.font$}
-$endfor$
 $if(mathfont)$
 $if(mathspec)$
   \ifXeTeX
@@ -155,7 +184,6 @@ $if(CJKmainfont)$
     \setmainjfont[$for(CJKoptions)$$CJKoptions$$sep$,$endfor$]{$CJKmainfont$}
   \fi
 $endif$
-\fi
 $if(zero-width-non-joiner)$
 %% Support for zero-width non-joiner characters.
 \makeatletter
@@ -342,9 +370,22 @@ $if(block-headings)$
 \fi
 $endif$
 $endif$
+
 $if(pagestyle)$
 \pagestyle{$pagestyle$}
+$else$
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+%\lhead{\textbf{$name$}}
+\lhead{\textscsl{\textbf{$assignment$}}}
+%\chead{\textsc{$assignment$}}
+%\rhead{\textsc{\textbf{\textit{\nouppercase\leftmark}}}}
+\rhead{\fontfamily{jkpos}\textscsl{\textbf{\nouppercase\leftmark}}}
+%\setlength\parindent{0pt} 
 $endif$
+
+
 $if(csl-refs)$
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
@@ -425,7 +466,7 @@ $if(csquotes)$
 $endif$
 
 $if(title)$
-\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+\title{\textbf{$title$}$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 $if(subtitle)$
 $if(beamer)$
@@ -437,9 +478,9 @@ $else$
 }
 \makeatother
 $endif$
-\subtitle{$subtitle$}
+\subtitle{\fontfamily{jkpos}\textscsl{$subtitle$}}
 $endif$
-\author{$for(author)$$author$$sep$ \and $endfor$}
+\author{\fontfamily{jkpos}\textbf{\textsc{$for(author)$$author$$sep$ \and $endfor$}}}
 \date{$date$}
 $if(beamer)$
 $if(institute)$
@@ -452,6 +493,47 @@ $if(logo)$
 \logo{\includegraphics{$logo$}}
 $endif$
 $endif$
+
+% hw-style sections
+\usepackage{titlesec}
+\titleformat{\section}[block]
+  {\bfseries}
+  % cant quite figure out scsl sections here
+  {\textup{\thesection}} % label
+  {0.5em}%                sep
+  {}%                     before
+  %[\rule{\textwidth}{0.44pt}]
+  [\titlerule]%           after
+
+% found https://www.tug.org/TUGboat/tb19-2/tb59gibb.pdf
+\def\dashedrule#1#2#3{{%
+% #1 is length of dash
+% #2 is length of gap between dashes
+% #3 is number of dashes
+\dimen1=#2 \divide\dimen1 by 2
+\def\@ruledash{%
+\rule{\dimen1}{0pt}%
+\rule[0.0ex]{#1}{0.4pt}%
+% line is 0.5ex above the baseline
+% and 0.4pt thick
+\rule{\dimen1}{0pt}}%
+\count1=0
+\loop%
+\ifnum\count1<#3%
+\advance\count1 by 1%
+\@ruledash%
+\repeat}}
+\def\shortdashes{\dashedrule{.125em}{.125em}{170}}
+ 
+
+\titleformat{\subsection}[block]
+  {\bfseries\itshape}
+  %% cant quite figure out scsl sections here
+  {\textit{\textup{\thesubsection}}} % label
+  {0.5em}%                sep
+  {}%                     before
+  %%[\rule{\textwidth}{0.44pt}]
+  []%           after
 
 \begin{document}
 $if(has-frontmatter)$

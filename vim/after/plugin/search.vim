@@ -11,7 +11,7 @@
 " define useful base values
 let rg_base = 'rg --column --line-number --no-heading --color=always --smart-case'
 
-function FzfGrepPreview(cmd, pat, loc, qry, prm, nth, bng, pny, snk, ...)
+function HuhGrepPreview(cmd, pat, loc, qry, prm, nth, bng, pny, snk, ...)
     let spec = fzf#vim#with_preview({
     \       'options': [
     \           '--prompt', a:prm,
@@ -27,7 +27,7 @@ function FzfGrepPreview(cmd, pat, loc, qry, prm, nth, bng, pny, snk, ...)
     if a:pny
         call add(spec.options, '--phony')
     endif
-
+    echo spec['options']
     if a:0 > 0
         let pos = index(spec['options'], '--preview')
         let spec.options[pos+1] = a:1
@@ -38,8 +38,8 @@ function FzfGrepPreview(cmd, pat, loc, qry, prm, nth, bng, pny, snk, ...)
     end
 
     call extend(spec, {
-    \       'sink*': funcref('s:'.a:snk),
-    \   })
+    \   'sink*': funcref('s:'.a:snk),
+    \ })
 
     call fzf#vim#grep(a:cmd.' '.a:pat.' '.a:loc, 1, spec, a:bng)
 endfunction
@@ -64,6 +64,14 @@ function! s:accept_line(lines) abort "{{{1
         endif
     endif
 
+    try
+        if call(get(g:, 'wiki_file_handler', ''), [], {'path':l:fname,'page':l:page})
+            return
+        endif
+    catch /E117:/
+      " Pass
+    endtry
+
     execute 'edit '.l:fname
     execute l:lnum
 endfunction
@@ -75,6 +83,14 @@ function! s:accept_page(lines) abort "{{{1
     let l:target = a:lines[0]
   else
     let l:target = a:lines[2]
+
+    try
+        if call(get(g:, 'wiki_file_handler', ''), [], {'path':l:target})
+            return
+        endif
+    catch /E117:/
+      " Pass
+    endtry
   endif
 
   execute 'edit '.l:target
@@ -83,7 +99,7 @@ endfunction
 
 " DirFzfFiles - search current directory filenames and go to file
 command! -bang -nargs=* DirFzfFiles
-    \ call FzfGrepPreview(
+    \ call HuhGrepPreview(
     \   'rg --files',
     \   shellescape(<q-args>),
     \   '*',
@@ -101,9 +117,13 @@ command! -bang -nargs=* DirFzfFiles
 " (recursive) and go to file. Following FZF session has a prefilled query
 " using the first argument, which is a string used for the initial ripgrep
 " exact search.
-let s:rga_base = 'rga --column --line-number --no-heading --color=always --smart-case -- %s'
+let rg_colors = ' --colors ''path:fg:108,113,196'' '.
+              \ ' --colors ''line:fg:211,54,130'' '.
+              \ ' --colors ''column:fg:113,158,7'' '.
+              \ ' --colors ''match:fg:220,50,47'' '
+let s:rga_base = 'rga --column --line-number --no-heading --color=always --smart-case'.rg_colors.' -- %s'
 command! -bang -nargs=* DirFzfLines
-    \ call FzfGrepPreview(
+    \ call HuhGrepPreview(
     \   printf(s:rga_base, shellescape(<q-args>)),
     \   '',
     \   '',
