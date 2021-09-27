@@ -150,7 +150,7 @@ hi  pandocLinkDefinition                    cterm=underline  ctermfg=6  guifg=#2
 hi  pandocLinkDefinitionID                  cterm=NONE  ctermfg=4  guifg=#268bd2  gui=NONE
 hi  pandocLinkDelim                         cterm=NONE  ctermfg=10  guifg=#586e75  gui=NONE
 hi  pandocLinkLabel                         cterm=underline  ctermfg=4  guifg=#268bd2  gui=underline
-hi  pandocLinkText                          cterm=NONE,underline  ctermfg=13  guifg=#6c71c4 gui=NONE,underline
+hi  pandocLinkText                          cterm=NONE  ctermfg=13  guifg=#6c71c4  gui=NONE
 hi  pandocLinkTitle                         cterm=underline  ctermfg=11  guifg=#657b83  gui=underline
 hi  pandocLinkTitleDelim                    cterm=underline  ctermfg=10  guifg=#586e75  guisp=#657b83  gui=underline
 hi  pandocLinkURL                           cterm=underline  ctermfg=11  guifg=#657b83  gui=underline
@@ -199,6 +199,38 @@ hi  pandocVerbatimInline                    cterm=NONE  ctermfg=3  guifg=#b58900
 hi  pandocVerbatimInlineDefinition          cterm=NONE  ctermfg=13  guifg=#6c71c4  gui=NONE
 hi  pandocVerbatimInlineHeading             cterm=NONE  ctermfg=9  guifg=#cb4b16  gui=NONE
 hi  pandocVerbatimInlineTable               cterm=NONE  ctermfg=4  guifg=#268bd2  gui=NONE
+
+" == MARKDOWN ==
+"hi! link markdownH1 GruvboxRedBold
+"hi! link markdownH2 GruvboxRed
+"hi! link markdownH3 GruvboxYellow
+"hi! link markdownH4 GruvboxYellow
+"hi! link markdownH5 GruvboxYellow
+"hi! link markdownH6 GruvboxYellow
+
+"hi! link markdownCode GruvboxAqua
+"hi! link markdownCodeBlock GruvboxAqua
+"hi! link markdownCodeDelimiter GruvboxAqua
+
+"hi! link markdownBlockquote                     cterm=NONE  ctermfg=4  guifg=#268bd2  gui=NONE
+"hi! link markdownListMarker GruvboxGray
+"hi! link markdownOrderedListMarker GruvboxGray
+"hi! link markdownRule GruvboxGray
+"hi! link markdownHeadingRule GruvboxGray
+
+"hi! link markdownUrlDelimiter GruvboxFg3
+"hi! link markdownLinkDelimiter GruvboxFg3
+"hi! link markdownLinkTextDelimiter GruvboxFg3
+"hi! link markdownHeadingDelimiter GruvboxOrange
+"hi! link markdownUrlTitleDelimiter GruvboxGreen
+
+"hi! link markdownLink       GruvboxPurple
+"hi! link markdownWikiLink   GruvboxYellow
+"hi! link markdownUrl        GruvboxGreen
+"hi! link markdownInlineUrl  GruvboxOrange
+
+"hi! link markdownLinkText GruvboxPurple
+" ==============
 
 hi  perlHereDoc                             cterm=NONE  ctermfg=14  ctermbg=8  guifg=#93a1a1  guibg=#002b36  gui=NONE
 hi  perlStatementFileDesc                   cterm=NONE  ctermfg=6  ctermbg=8  guifg=#2aa198  guibg=#002b36  gui=NONE
