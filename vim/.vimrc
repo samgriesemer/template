@@ -29,9 +29,18 @@ filetype indent off
 
 set termguicolors
 set background=dark
+"colorscheme flattened_dark
+"colorscheme flattened_light
 "colorscheme solarized_og
-colorscheme flattened_dark
+
+let g:gruvbox_italic=1
 "colorscheme gruvbox
+let g:gruvbox_contrast_dark='medium'
+let g:airline_theme='gruvbox'
+
+"colorscheme worldreport
+colorscheme solr
+"colorscheme world_news
 
 syntax enable
 set spell
@@ -46,6 +55,9 @@ call plug#begin('~/.vim/plugged')
 
 "" vim-fugitive ""
 Plug 'tpope/vim-fugitive'
+
+"" vim-obsession ""
+Plug 'tpope/vim-obsession'
 
 "" UltiSnips engine and snippets ""
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -156,7 +168,7 @@ let g:wiki_mappings_local = {
     \ '<plug>(wiki-graph-find-backlinks)' : '<Leader>wlb',
 \ }
 let g:wiki_map_create_page = 'StringToFname'  " used through with `wn`
-let g:wiki_map_file2link = 'FnameToString'    " file to link map, for renaming
+let g:wiki_map_file2link = 'FnameToString'    " file to link map, for renaming & vim-roam link reverse
 let g:wiki_resolver = 'WikiResolver'          " transform link to filename
 let g:wiki_file_handler = 'WikiFileOpen'      " handle wiki `file:` opening
 let g:wiki_post_page_open = 'WikiPostOpen'    " callback after page open
@@ -187,6 +199,7 @@ function! WikiFileOpen(...) abort dict
         let l:cmd .= ' -P '.string(self.page)
     endif
     silent execute l:cmd.' &'
+    redraw!
     return 1
   endif
   return 0

@@ -96,6 +96,7 @@ project:
 status:
 priority:
 description:
+tags:
 ---
 
 $0
@@ -128,5 +129,11 @@ $4
 # Usage
 $0
 endsnippet
+
+# 
+snippet clip "Clip Image"
+![$1](`scrot -s '/home/smgr/Documents/notes/images/%s.png' -e 'echo "images/$n"'`)$0
+endsnippet
+
 
 # vim:ft=snippets:
