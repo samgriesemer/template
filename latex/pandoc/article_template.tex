@@ -76,9 +76,9 @@ $endfor$
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 \renewcommand{\vec}[1]{\mathbf{#1}} % overriding vector
 
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{conj}[theorem]{Conjecture}
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{conj}[theorem]{Conjecture}
 
 
 $if(beamer)$
@@ -202,15 +202,32 @@ $if(zero-width-non-joiner)$
 %% End of ZWNJ support
 $endif$
 $if(beamer)$
+
 $if(theme)$
 \usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+$else$
+\usetheme{Rochester}
 $endif$
+
 $if(colortheme)$
 \usecolortheme{$colortheme$}
+$else$
+\usecolortheme{spruce}
 $endif$
+
 $if(fonttheme)$
 \usefonttheme{$fonttheme$}
+$else$
+\usefonttheme{serif}
 $endif$
+
+\definecolor{lblue}{RGB}{223,223,255}
+\definecolor{lred}{RGB}{255, 129, 120}
+\definecolor{lgreen}{RGB}{29, 84, 47}
+\setbeamercolor{block title}{bg=black!75,fg=white}
+\setbeamertemplate{itemize item}{\color{lgreen}$$\blacktriangleright$$}
+\setbeamercolor{item projected}{bg=lgreen}
+
 $if(mainfont)$
 \usefonttheme{serif} % use mainfont rather than sansfont for slide text
 $endif$
@@ -490,6 +507,8 @@ $endif$
 $endif$
 
 \begin{document}
+% $meta-json$
+
 $if(has-frontmatter)$
 \frontmatter
 $endif$

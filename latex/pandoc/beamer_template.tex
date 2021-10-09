@@ -13,7 +13,6 @@ $if(CJKmainfont)$
 \PassOptionsToPackage{space}{xeCJK}
 $endif$
 %
-%
 \documentclass[
 $if(fontsize)$
   $fontsize$,
@@ -38,7 +37,6 @@ $for(classoption)$
 $endfor$
 ]{$documentclass$}
 
-
 % added packages
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -52,8 +50,6 @@ $endfor$
 \usepackage{tikz}
 \usepackage{tikz-qtree}
 \usetikzlibrary{shadows,arrows.meta,positioning,backgrounds,fit,chains,scopes,shapes}
-\usepackage{booktabs}
-
 
 \usepackage{pgfplots}
 \pgfplotsset{
@@ -72,7 +68,6 @@ $endfor$
 }
 \usepgfplotslibrary{groupplots}
 \usepgfplotslibrary{dateplot}
-\usepackage{pgfplotstable}
 
 % custom math operators
 \DeclareMathOperator*{\argmin}{\arg\!\min}
@@ -81,9 +76,17 @@ $endfor$
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
 \renewcommand{\vec}[1]{\mathbf{#1}} % overriding vector
 
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{conj}[theorem]{Conjecture}
+%\newtheorem{theorem}{Theorem}[section]
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{conj}[theorem]{Conjecture}
+
+%\usetheme{Rochester}
+%\usecolortheme{spruce}
+\usetheme{CambridgeUS}
+
+\definecolor{lblue}{RGB}{223,223,255}
+\definecolor{lred}{RGB}{255, 129, 120}
+\definecolor{lgreen}{RGB}{29, 84, 47}
 
 
 $if(beamer)$
@@ -147,6 +150,8 @@ $else$
 \usepackage[T1]{fontenc}
 \usepackage{kpfonts}
 $endif$
+
+
 $if(linestretch)$
 \usepackage{setspace}
 $endif$
@@ -207,25 +212,46 @@ $if(zero-width-non-joiner)$
 %% End of ZWNJ support
 $endif$
 $if(beamer)$
+
 $if(theme)$
 \usetheme[$for(themeoptions)$$themeoptions$$sep$,$endfor$]{$theme$}
+$else$
+\usetheme{CambridgeUS}
+\setbeamerfont{author in head/foot}{size={\fontsize{3pt}{4pt}\selectfont}}
 $endif$
+
 $if(colortheme)$
 \usecolortheme{$colortheme$}
+$else$
+\usecolortheme{spruce}
 $endif$
+
 $if(fonttheme)$
 \usefonttheme{$fonttheme$}
+$else$
+\usefonttheme{serif}
 $endif$
+
 $if(mainfont)$
 \usefonttheme{serif} % use mainfont rather than sansfont for slide text
 $endif$
+
 $if(innertheme)$
 \useinnertheme{$innertheme$}
 $endif$
+
 $if(outertheme)$
 \useoutertheme{$outertheme$}
 $endif$
 $endif$
+
+% custom style overrides
+%\setbeamercolor{block title}{bg=black!75,fg=white}
+%\setbeamertemplate{itemize item}{\color{lgreen}$$\blacktriangleright$$}
+%\setbeamercolor{item projected}{bg=lgreen}
+%\setbeamercolor{frametitle}{bg=black!75,fg=white}
+
+
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \IfFileExists{microtype.sty}{% use microtype if available
@@ -248,7 +274,9 @@ $endif$
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}
 $endif$
+
 \usepackage{xcolor}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
@@ -380,11 +408,8 @@ $else$
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-%\lhead{\textbf{$name$}}
-\lhead{\textscsl{\textbf{$assignment$}}}
-%\chead{\textsc{$assignment$}}
-%\rhead{\textsc{\textbf{\textit{\nouppercase\leftmark}}}}
-\rhead{\fontfamily{jkpos}\textscsl{\textbf{\nouppercase\leftmark}}}
+\lhead{\textbf{\rightmark}}
+\rhead{\textbf{\leftmark}}
 %\setlength\parindent{0pt} 
 $endif$
 
@@ -469,7 +494,7 @@ $if(csquotes)$
 $endif$
 
 $if(title)$
-\title{\textbf{$title$}$if(thanks)$\thanks{$thanks$}$endif$}
+\title[titletest]{$title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 $if(subtitle)$
 $if(beamer)$
@@ -481,13 +506,13 @@ $else$
 }
 \makeatother
 $endif$
-\subtitle{\fontfamily{jkpos}\textscsl{$subtitle$}}
+\subtitle{$subtitle$}
 $endif$
-\author{\fontfamily{jkpos}\textbf{\textsc{$for(author)$$author$$sep$ \and $endfor$}}}
+\author{$for(author)$$author$$sep$ \and $endfor$}
 \date{$date$}
 $if(beamer)$
 $if(institute)$
-\institute{$for(institute)$$institute$$sep$ \and $endfor$}
+\institute[USC]{$for(institute)$$institute$$sep$ \and $endfor$}
 $endif$
 $if(titlegraphic)$
 \titlegraphic{\includegraphics{$titlegraphic$}}
@@ -497,48 +522,8 @@ $if(logo)$
 $endif$
 $endif$
 
-% hw-style sections
-\usepackage{titlesec}
-\titleformat{\section}[block]
-  {\bfseries}
-  % cant quite figure out scsl sections here
-  {\textup{\thesection}} % label
-  {0.5em}%                sep
-  {}%                     before
-  %[\rule{\textwidth}{0.44pt}]
-  [\titlerule]%           after
-
-% found https://www.tug.org/TUGboat/tb19-2/tb59gibb.pdf
-\def\dashedrule#1#2#3{{%
-% #1 is length of dash
-% #2 is length of gap between dashes
-% #3 is number of dashes
-\dimen1=#2 \divide\dimen1 by 2
-\def\@ruledash{%
-\rule{\dimen1}{0pt}%
-\rule[0.0ex]{#1}{0.4pt}%
-% line is 0.5ex above the baseline
-% and 0.4pt thick
-\rule{\dimen1}{0pt}}%
-\count1=0
-\loop%
-\ifnum\count1<#3%
-\advance\count1 by 1%
-\@ruledash%
-\repeat}}
-\def\shortdashes{\dashedrule{.125em}{.125em}{170}}
- 
-
-\titleformat{\subsection}[block]
-  {\bfseries\itshape}
-  %% cant quite figure out scsl sections here
-  {\textit{\textup{\thesubsection}}} % label
-  {0.5em}%                sep
-  {}%                     before
-  %%[\rule{\textwidth}{0.44pt}]
-  []%           after
-
 \begin{document}
+
 $if(has-frontmatter)$
 \frontmatter
 $endif$

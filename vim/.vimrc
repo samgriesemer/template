@@ -19,7 +19,7 @@ set breakindent
 set autoindent
 set incsearch
 set hlsearch
-set hidden
+"set hidden
 set shortmess-=S
 set textwidth=90
 set display+=lastline
@@ -33,18 +33,26 @@ set background=dark
 "colorscheme flattened_light
 "colorscheme solarized_og
 
-let g:gruvbox_italic=1
 "colorscheme gruvbox
-let g:gruvbox_contrast_dark='medium'
-let g:airline_theme='gruvbox'
+"let g:gruvbox_contrast_dark='medium'
+"let g:airline_theme='solarized'
+"let g:airline_theme='gruvbox'
 
 "colorscheme worldreport
 colorscheme solr
+let g:solr_italic=1
+let g:airline_theme='solr'
+
 "colorscheme world_news
+"let g:airline_theme='solr'
 
 syntax enable
 set spell
 set spelllang=en_us
+
+set cursorline
+set cursorlineopt=number
+autocmd ColorScheme * highlight CursorLineNr cterm=bold term=bold gui=bold
 
 
 """"""""""""""""""""""""
@@ -184,17 +192,30 @@ endfunction
 function! WikiResolver(fname, origin)
   if empty(a:fname) | return a:origin | endif
 
-  let l:file = a:fname
-  if fnamemodify(l:file, ':e') == 'md'
-      let l:file = fnamemodify(l:file, ':r')
+  let l:file = StringToFname(a:fname)
+  let l:file = simplify(wiki#get_root().'/'.l:file)
+  let l:ext  = fnamemodify(l:file, ':e')
+
+  if l:ext == 'md'
+    return l:file
+  elseif l:ext == 'pdf'
+    eval call('WikiFileOpen', [], {'path': l:file})
+  else
+    if filereadable(l:file.'.md')
+      return l:file.'.md'
+    elseif filereadable(l:file.'.pdf')
+      eval call('WikiFileOpen', [], {'path': l:file.'.pdf'})
+    else
+      " final default behavior, open new Markdown file
+      return l:file.'.md'
+    endif
   endif
-  let l:file = StringToFname(l:file)
-  return simplify(wiki#get_root().'/'.l:file.'.md')
+  return a:origin
 endfunction
 
 function! WikiFileOpen(...) abort dict
   if self.path =~# 'pdf$'
-    let l:cmd = '!zathura '.fnameescape(self.path)
+    let l:cmd = '!nohup zathura '.fnameescape(self.path)
     if get(self, 'page')
         let l:cmd .= ' -P '.string(self.page)
     endif
@@ -227,10 +248,13 @@ endfunction
 let g:roam_search_wrap_link = 'WrapLink'
 
 function! WrapLink(lines)
-    "call feedkeys('A')
     let l:link = join(a:lines)
     let l:link = FnameToString(l:link)
-    let l:link = '[['.l:link.']]'
+    if fnamemodify(l:link, ':e') == 'pdf'
+        let l:link = '[['.l:link.']]'
+    else
+        let l:link = '[['.fnamemodify(l:link,':r').']]'
+    endif
 
     if getcurpos()[2]+strlen(l:link) > &tw
         let l:spacing = repeat(' ', &tw - getcurpos()[2])
