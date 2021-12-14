@@ -31,9 +31,9 @@ modified: `!p snip.rv=dt(snip.basename)`
 type: journal
 ---
 
-# Todo | -event entry.before:`!p snip.rv=dt(snip.basename,1)` due.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) | due:`!p snip.rv=dt(snip.basename)`T23:59:59
+# Todo | -event -PROJECT entry.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) | due:`!p snip.rv=dt(snip.basename)`T23:59:59
 
-# Events | +event entry.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) | +event
+# Events | +event entry.before:`!p snip.rv=dt(snip.basename,1)` (status:pending or end.after:`!p snip.rv=dt(snip.basename)`) due.before:`!p snip.rv=dt(snip.basename,1)` | +event
 
 # Log
 $0
@@ -133,6 +133,19 @@ endsnippet
 # 
 snippet clip "Clip Image"
 ![$1](`scrot -s '/home/smgr/Documents/notes/images/%s.png' -e 'echo "images/$n"'`)$0
+endsnippet
+
+snippet det "Details"
+<details${3: open}>
+${1:<summary>${2}</summary>}
+${0:${VISUAL:details}}
+</details>
+endsnippet
+
+snippet ref "Reference Link"
+[${1:${VISUAL:Text}}][${2:id}]$0
+
+[$2]: ${3:link} ${4:($5)}
 endsnippet
 
 
