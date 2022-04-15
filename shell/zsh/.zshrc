@@ -53,7 +53,7 @@ ZSH_THEME="custom"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -71,9 +71,13 @@ ZSH_THEME="custom"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(
+    git
+    zsh-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
+
 
 # User configuration
 
@@ -139,7 +143,7 @@ export BAT_THEME='Solarized (dark)'
 unsetopt nomatch
 
 ## RUST ##
-#export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
 
 # convenient open
 alias open="xdg-open"
@@ -169,35 +173,112 @@ rga-fzf() {
 ## add local bin to path ##
 export PATH="${PATH}:/home/smgr/.local/bin"
 
+
 ## firefox alias
 alias firefox="firefox-developer-edition"
 
 ## pandoc latex building for now
 md2pdf() {
+  local outp="${1%.*}.pdf"
+  if [ $# -eq 2 ]; then
+      local outp=$2
+  fi
+  echo "Converting $1 to $outp"
+
   pandoc -N \
     --highlight-style tango \
-    --template=/home/smgr/Documents/projects/templates/latex/pandoc/article_template.tex \
+    --template=/home/smgr/Documents/projects/templates/latex/pandoc/basic_template.tex \
     --variable csquotes \
     --variable geometry="margin=1.3in" \
     --pdf-engine=xelatex \
+    -t latex \
     $1 \
-    -o $2
+    -o "$outp"
+}
+
+
+md2article() {
+  local outp="${1%.*}.pdf"
+  if [ $# -eq 2 ]; then
+      local outp=$2
+  fi
+  echo "Converting $1 to $outp"
+
+  pandoc -N -C \
+    --highlight-style kate \
+    --template=/home/smgr/Documents/projects/templates/latex/pandoc/article_template.tex \
+    --variable csquotes \
+    --variable geometry="margin=0.7in" \
+    --variable classoption="twocolumn" \
+    -M link-citations \
+    -M link-bibliography \
+    --bibliography=/home/smgr/Documents/notes/docs/bb-global.bib \
+    --csl=/home/smgr/Documents/projects/templates/latex/pandoc/acm-sig-proceedings-long-author-list.csl \
+    --pdf-engine=xelatex \
+    -f markdown+rebase_relative_paths \
+    -t latex \
+    $1 \
+    -o "$outp"
+}
+
+md2beam() {
+  local outp="${1%.*}.pdf"
+  if [ $# -eq 2 ]; then
+      local outp=$2
+  fi
+  echo "Converting $1 to $outp"
+
+  pandoc -N -C \
+    --highlight-style tango \
+    --dpi=300 \
+    --listings \
+    --top-level-division=section \
+    --slide-level=3 \
+    --toc-depth=5 \
+    --template=/home/smgr/Documents/projects/templates/latex/pandoc/beamer_test/default_mod.latex \
+    -H /home/smgr/Documents/projects/templates/latex/pandoc/beamer_test/preamble.tex \
+    --bibliography=/home/smgr/Documents/notes/docs/bb-global.bib \
+    --csl=/home/smgr/Documents/projects/templates/latex/pandoc/acm-sig-proceedings-long-author-list.csl \
+    --pdf-engine=xelatex \
+    -f markdown+rebase_relative_paths \
+    -t beamer \
+    $1 \
+    -o "$outp"
 }
 
 mkhw() {
+  local outp="${1%.*}.pdf"
+  if [ $# -eq 2 ]; then
+      local outp=$2
+  fi
+  echo "Converting $1 to $outp"
+
   pandoc \
-    --highlight-style tango \
+    --highlight-style kate \
     --template=/home/smgr/Documents/projects/templates/latex/pandoc/hw_template.tex \
     --variable csquotes \
     --variable geometry="margin=1.0in" \
+    --syntax-definition=/home/smgr/Documents/projects/_external/syntax-highlighting/data/syntax/diff.xml \
     --pdf-engine=xelatex \
     -t latex \
     $1 \
-    -o ${1%.*}.pdf
+    -o "$outp"
 }
+
+## nvim alias
+alias vim="nvim"
 
 #PATH="/home/smgr/perl5/bin${PATH:+:${PATH}}"; export PATH;
 #PERL5LIB="/home/smgr/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
 #PERL_LOCAL_LIB_ROOT="/home/smgr/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 #PERL_MB_OPT="--install_base \"/home/smgr/perl5\""; export PERL_MB_OPT;
 #PERL_MM_OPT="INSTALL_BASE=/home/smgr/perl5"; export PERL_MM_OPT;
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+
+# pyenv virtualenv
+eval "$(pyenv virtualenv-init -)"
