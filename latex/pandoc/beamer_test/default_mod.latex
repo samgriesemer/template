@@ -48,7 +48,9 @@ $endif$
 %%
 %%% Definition of colors
 %%% Source: https://latexcolor.com/
-\definecolor{blanchedalmond}{rgb}{1.0, 0.92, 0.8}
+%\definecolor{blanchedalmond}{rgb}{1.0, 0.92, 0.8}
+%\definecolor{blond}{rgb}{0.98, 0.94, 0.75}
+\definecolor{blanchedalmond}{rgb}{0.87, 1.0, 0.87}
 \definecolor{blond}{rgb}{0.98, 0.94, 0.75}
 %%% End of definition of colors
 %%
@@ -172,6 +174,15 @@ $endif$
 $if(colortheme)$
 \usecolortheme{$colortheme$}
 $endif$
+
+
+\definecolor{primaryColor}{RGB}{222,255,222}
+\definecolor{secondaryColor}{RGB}{221,221,221}
+\setbeamercolor*{palette primary}{bg=primaryColor, fg = green}
+\setbeamercolor*{palette secondary}{bg=secondaryColor, fg = green}
+%\setbeamercolor*{palette tertiary}{bg=myNewColorC, fg = green}
+%\setbeamercolor*{palette quaternary}{bg=myNewColorD, fg = green}
+
 $if(fonttheme)$
 \usefonttheme{$fonttheme$}
 $endif$
@@ -311,7 +322,7 @@ $if(strikeout)$
 $endif$
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+  \setlength{\itemsep}{5pt}\setlength{\parskip}{0pt}}
 $if(numbersections)$
 \setcounter{secnumdepth}{$if(secnumdepth)$$secnumdepth$$else$5$endif$}
 $else$

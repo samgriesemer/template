@@ -3,6 +3,11 @@
 \definecolor{lred}{RGB}{255, 129, 120}
 \definecolor{lgreen}{RGB}{29, 84, 47}
 
+\definecolor{ligreen}{RGB}{212,255,212}
+\definecolor{midgreen}{RGB}{202,255,202}
+\definecolor{liblue}{RGB}{237,237,255}
+\definecolor{midblue}{RGB}{102,102,255}
+
 \definecolor{tred}{RGB}{232, 77, 77}
 
 % bright colors
@@ -21,7 +26,7 @@
 
 \definecolor{grey1}{RGB}{50, 50, 50}
 \definecolor{grey2}{RGB}{70, 70, 70}
-\definecolor{grey3}{RGB}{90, 90, 90}
+\definecolor{grey3}{RGB}{120, 120, 120}
 
 
 \setbeamercolor{palette primary}{bg=grey1,fg=white}
@@ -190,7 +195,8 @@
 
 %% custom style overrides %%
 \setbeamertemplate{title page}[default][colsep=-4bp,rounded=true]
-\setbeamercolor{title}{bg=nred,fg=white}
+%\setbeamercolor{title}{bg=nred,fg=white}
+\setbeamercolor{title}{bg=black,fg=white}
 
 % remove styles from block elements, straight edges
 \setbeamertemplate{blocks}[default]
@@ -210,10 +216,11 @@
 
 %% HEADLINE SECTIONS %%
 %% Change subsection in footer color (author and institute color)
-\setbeamercolor{subsection in head/foot}{bg=nviolet1,fg=white}
+%\setbeamercolor{subsection in head/foot}{bg=nviolet1,fg=white}
+\setbeamercolor{subsection in head/foot}{bg=ligreen,fg=black}
 
 %change ilmenau section dot color 
-\setbeamercolor{section in head/foot}{bg=nred,fg=black} 
+\setbeamercolor{section in head/foot}{bg=ligreen,fg=black} 
 %% END HEADLINE SECTIONS %%
 
 
@@ -225,7 +232,8 @@
 \setbeamertemplate{mini frame in current subsection}[box]
 %% END MINIFRAME %%
 
-\setbeamertemplate{itemize item}{\color{nviolet1}$\blacktriangleright$}
+%\setbeamertemplate{itemize item}{\color{nviolet1}$\blacktriangleright$}
+\setbeamertemplate{itemize item}{\color{black!95}$\blacktriangleright$}
 \setbeamertemplate{itemize subitem}{%
   \tiny\raise1.5pt\hbox{\donotcoloroutermaths$\blacktriangleright$}
 }
@@ -236,11 +244,26 @@
 
 \setbeamercolor{section in toc}{fg=black} % TOC sections
 \setbeamercolor{subsection in toc}{bg=black,fg=black} % TOC sections
-\setbeamercolor{block title}{bg=grey2,fg=white}
+\setbeamercolor{block title}{bg=grey3,fg=white}
 \setbeamercolor{block body}{bg=black!10,fg=black}
+%\setbeamercolor{item projected}{bg=nviolet1}
 \setbeamercolor{item projected}{bg=nviolet1}
-\setbeamercolor{frametitle}{bg=black!10,fg=black}
+\setbeamercolor{frametitle}{bg=black!95,fg=white}
 
+\setbeamerfont{frametitle}{size={\fontsize{11}{12}}}
+\setbeamertemplate{frametitle}{%
+    \nointerlineskip%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.6ex,dp=1.3ex]{frametitle}
+        \hspace*{1ex}\insertframetitle%
+    \end{beamercolorbox}%
+}
+
+% frame margins
+\setbeamersize
+{
+    text margin left=0.5cm,
+    text margin right=0.5cm
+}
 
 
 % example including the prefixed section number
@@ -249,13 +272,15 @@
 \setbeamertemplate{headline}
 {
   \leavevmode%
-  \hbox{%
-  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{section in head/foot}%
-    \usebeamerfont{section in head/foot}\thesection.\ \insertsectionhead\hspace*{2ex}
+  %\hbox{%
+  \begin{beamercolorbox}[wd=1.0\paperwidth,ht=2.25ex,dp=1ex,right]{section in head/foot}%
+    \usebeamerfont{section in head/foot}\textbf{\textit{\thesection.\
+    \insertsectionhead\hspace*{2ex}}}
   \end{beamercolorbox}%
-  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{subsection in head/foot}%
-      \usebeamerfont{subsection in head/foot}\hspace*{2ex}\thesubsection)\ \insertsubsectionhead
-  \end{beamercolorbox}}%
+  %\begin{beamercolorbox}[wd=1.0\paperwidth,ht=2.25ex,dp=1ex,left]{subsection in head/foot}%
+  %    \usebeamerfont{subsection in head/foot}\hspace*{2ex}\textit{\thesubsection)\ \insertsubsectionhead}
+  %\end{beamercolorbox}
+  %}%
   \vskip0pt%
 }
 

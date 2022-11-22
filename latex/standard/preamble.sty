@@ -11,8 +11,10 @@
 % packages
 \usepackage{hyperref}
 \usepackage{multirow}
+\usepackage{pgfplotstable}
 \usepackage{array}
 \usepackage{booktabs}
+\usepackage{colortbl}
 \usepackage{microtype}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -80,8 +82,22 @@
     tick style={semithick, black}
   }
 }
+% all auxiliary pgf libs
 \usepgfplotslibrary{groupplots}
 \usepgfplotslibrary{dateplot}
+\usepgfplotslibrary{patchplots}
+\usepgfplotslibrary{ternary}
+
+
+% table plotting prefs
+\pgfplotstableset{% global config, for example in the preamble
+% these columns/<colname>/.style={<options>} things define a style
+% which applies to <colname> only.
+empty cells with={--}, % replace empty cells with ’--’
+every head row/.style={before row=\toprule,after row=\midrule},
+every last row/.style={after row=\bottomrule}
+}
+
 
 % custom math operators
 \DeclareMathOperator*{\argmin}{\arg\!\min}
